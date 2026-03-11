@@ -3,7 +3,6 @@ name: Check pre commit
 on:
   pull_request:
     types: [edited, opened, reopened, synchronize]
-    paths: ['**/*.py']
 jobs:
   pre-commit:
     name: Check pre commit
