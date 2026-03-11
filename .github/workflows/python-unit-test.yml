@@ -3,6 +3,7 @@ name: Python Unit Test
 on:
   pull_request:
     types: [edited, opened, reopened, synchronize]
+    paths: ['**/*.py']
 jobs:
   python-unit-test:
     name: Python Unit Test
