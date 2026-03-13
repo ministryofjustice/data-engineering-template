@@ -1,1 +1,1 @@
-"""Initialize class variables."""
+"""Init file."""
