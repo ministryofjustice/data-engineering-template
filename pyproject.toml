@@ -16,6 +16,9 @@ dev = [
     "mypy>=1.16.1",
     "ruff>=0.12.2",
 ]
+test = [
+    "pytest>=8.4.2",
+]
 
 [tool.uv]
 package = true
