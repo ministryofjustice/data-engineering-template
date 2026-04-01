@@ -53,7 +53,7 @@ repos:
     rev: v1.37.1
     hooks:
       - id: yamllint
-  
+
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 3.4.1
     hooks:

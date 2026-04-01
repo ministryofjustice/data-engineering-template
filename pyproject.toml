@@ -16,6 +16,10 @@ dev = [
     "mypy>=1.16.1",
     "ruff>=0.12.2",
 ]
+test = [
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0"
+]
 
 [tool.uv]
 package = true
@@ -41,7 +45,7 @@ ignore = [
     "T201", # No print statements
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/*" = [
     "ARG", # some arguments are unused in tests functions but useful (e.g. mocks)
     "S101", # asserts are OK for tests
