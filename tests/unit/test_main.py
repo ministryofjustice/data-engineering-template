@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.template.main import main
+from template.main import main
 
 
 def test_main(capsys: pytest.CaptureFixture[str]) -> None:

@@ -24,13 +24,20 @@ test = [
 [tool.uv]
 package = true
 
+[tool.setuptools.packages.find]
+where = ["src", "."]
+
 [project.scripts]
-template = "src.template.main:main"
+template = "template.main:main"
 
 [tool.mypy]
 strict = true
 namespace_packages = false
 disallow_untyped_defs = true
+exclude = "migrations|tests|dist|build|typings"
+explicit_package_bases = true
+warn_unused_ignores = true
+show_error_codes = true
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=term-missing"
