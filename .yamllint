@@ -4,6 +4,8 @@ extends: default
 rules:
   line-length:
     max: 150
+  comments:
+    min-spaces-from-content: 1
 
   truthy:
     allowed-values: ["true", "false", "on"]

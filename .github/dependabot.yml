@@ -12,7 +12,7 @@ updates:
     schedule:
       interval: "daily"
     cooldown:
-        default-days: 7
+      default-days: 7
   - package-ecosystem: "terraform"
     directory: "/terraform"
     schedule:
