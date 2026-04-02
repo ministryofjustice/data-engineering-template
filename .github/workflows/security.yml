@@ -10,4 +10,4 @@ jobs:
             security-events: write
             contents: read
             actions: read
-        uses: ministryofjustice/data-engineering-github-actions/.github/workflows/reusable-security.yml@main
+        uses: ministryofjustice/data-engineering-github-actions/.github/workflows/reusable-security.yml@867b0f83016b15386c659b6a18fbd85037eb662f #v1.0.0
