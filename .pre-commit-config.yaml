@@ -1,26 +1,36 @@
 ---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
+      - id: check-added-large-files
+      - id: check-case-conflict
       - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
       - id: check-toml
       - id: check-yaml
-      - id: check-xml
-      - id: check-added-large-files
       - id: debug-statements
+      - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
       - id: name-tests-test
         args: [--pytest-test-first]
-      - id: check-case-conflict
-      - id: check-docstring-first
-      - id: check-merge-conflict
+      - id: no-commit-to-branch
+        args: [--branch, main, --branch, master]
       - id: pretty-format-json
         args: [--autofix]
+      - id: trailing-whitespace
+      - id: check-xml
+      - id: check-docstring-first
 
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.2
+    rev: v0.14.1
     hooks:
       - id: ruff
         types_or: [python, pyi, jupyter]
@@ -32,7 +42,6 @@ repos:
     rev: "v1.16.1"
     hooks:
       - id: mypy
-        args: [--config-file=.github/linters/.mypy.ini]
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
@@ -58,3 +67,17 @@ repos:
     rev: 3.4.1
     hooks:
       - id: sqlfluff-lint
+
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.104.0
+    hooks:
+      - id: terraform_fmt
+      - id: terraform_tflint
+      - id: terraform_validate
+        args:
+          - --tf-init-args=-lockfile=readonly
+      - id: terraform_checkov
+        args:
+          - --args=--framework terraform
+          - --args=--quiet
+          - --args=--compact
