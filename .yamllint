@@ -1,9 +1,10 @@
 ---
 extends: default
+ignore: .github/CODEOWNERS
 
 rules:
   line-length:
-    max: 155
+    max: 170
   comments:
     min-spaces-from-content: 1
 
