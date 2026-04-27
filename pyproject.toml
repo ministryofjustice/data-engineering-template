@@ -37,7 +37,7 @@ exclude = "migrations|dist|build|typings"
 explicit_package_bases = true
 warn_unused_ignores = true
 show_error_codes = true
-
+mypy_path = "src"
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=term-missing"
