@@ -8,4 +8,4 @@ jobs:
     name: Python type check
     permissions:
       contents: read
-    uses: ministryofjustice/data-engineering-github-actions/.github/workflows/reusable-python-type.yml@867b0f83016b15386c659b6a18fbd85037eb662f #v1.0.0
+    uses: ministryofjustice/data-engineering-github-actions/.github/workflows/reusable-python-type.yml@main

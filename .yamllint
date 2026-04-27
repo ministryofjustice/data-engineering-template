@@ -1,5 +1,6 @@
 ---
 extends: default
+ignore: .github/CODEOWNERS
 
 rules:
   line-length:

@@ -8,11 +8,13 @@ This template repository equips you with the default initial files required for 
 
 The repository comes with the following preset files:
 
+- pyproject.toml & uv.lock
 - LICENSE
 - .gitignore
 - CODEOWNERS
 - dependabot.yml
-- GitHub Actions example files
+- GitHub workflows (implementing all existing reusable workflows)
+- pre-commit-config.yaml
 - Ministry of Justice Compliance Badge (public repositories only)
 
 ## Setup Instructions
@@ -57,6 +59,10 @@ To update the badge, replace the `template-repository` in the badge URL with you
 
 **Please note** the badge will not function correctly if your repository is internal or private. In this case, you may remove the badge from your README.
 
+### Update pyproject.toml
+
+The pyproject.toml contains various placeholders for the template. Update the file to reflect your specific repository and its purpose
+
 ### Update CODEOWNERS
 
 (Optional) Modify the CODEOWNERS file to specify the teams or users authorized to approve pull requests.
@@ -68,3 +74,20 @@ Adapt the dependabot.yml file to match your project's [dependency manager](https
 ### Dependency Review
 
 If your repository is private with no GitHub Advanced Security license, remove the `.github/workflows/dependency-review.yml` file.
+
+### GitHub workflows
+
+Remove workflows that you do not need for your project.
+Some reusable workflows take arguments to configure their behaviour (e.g., python-unit-test) - configure them according to your needs
+
+### VS Code settings
+
+You may find that different extensions (e.g., yaml) will conflict with other settings / formatters. You may need to add some of these settings to your VS Code
+
+"[yaml]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "files.associations": {
+        ".github/CODEOWNERS": "plaintext"
+    },
+    "yaml.format.enable": false

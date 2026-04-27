@@ -33,7 +33,7 @@ template = "template.main:main"
 [tool.mypy]
 strict = true
 disallow_untyped_defs = true
-exclude = "migrations|tests|dist|build|typings"
+exclude = "migrations|dist|build|typings"
 explicit_package_bases = true
 warn_unused_ignores = true
 show_error_codes = true
