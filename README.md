@@ -80,6 +80,31 @@ If your repository is private with no GitHub Advanced Security license, remove t
 Remove workflows that you do not need for your project.
 Some reusable workflows take arguments to configure their behaviour (e.g., python-unit-test) - configure them according to your needs
 
+## AP airflow workflows
+
+These workflows are a requirement for deploying images to the EKS for use in airflow:
+
+- dependency-review (also useful to use generally)
+- release-container
+- scan-container
+- test-container
+
+## Codes standards & security
+
+These workflows should run on all repositories to maintain code standards and security:
+
+- pre-commit
+- python-lint
+- python-type
+- python-unit-test
+- security
+- yaml-lint
+
+## Optional
+
+- list-open-prs
+
+
 ### VS Code settings
 
 You may find that different extensions (e.g., yaml) will conflict with other settings / formatters. You may need to add some of these settings to your VS Code
