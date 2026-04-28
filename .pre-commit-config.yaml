@@ -42,10 +42,14 @@ repos:
       - id: ruff-format
         types_or: [python, pyi, jupyter]
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.16.1"
+  - repo: local
     hooks:
       - id: mypy
+        name: mypy
+        entry: uv run mypy .
+        language: system
+        pass_filenames: false
+        types: [python]
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
@@ -71,6 +75,7 @@ repos:
     rev: 3.4.1
     hooks:
       - id: sqlfluff-lint
+        args: [--dialect, athena, --templater, jinja, --ignore, templating]
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.104.0
