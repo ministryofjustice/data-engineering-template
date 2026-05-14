@@ -1,5 +1,14 @@
 # Ministry of Justice Template Repository
 
+[![GitHub release](https://img.shields.io/github/v/release/ministryofjustice/data-engineering-template)](https://github.com/ministryofjustice/data-engineering-template/releases)
+[![Python 3.13+](https://img.shields.io/badge/python-3.13%2B-blue)](pyproject.toml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+[![Python Unit Test](https://github.com/ministryofjustice/data-engineering-template/actions/workflows/python-unit-test.yml/badge.svg)](https://github.com/ministryofjustice/data-engineering-template/actions/workflows/python-unit-test.yml)
+[![Python Linting](https://github.com/ministryofjustice/data-engineering-template/actions/workflows/python-lint.yml/badge.svg)](https://github.com/ministryofjustice/data-engineering-template/actions/workflows/python-lint.yml)
+[![Python Type Check](https://github.com/ministryofjustice/data-engineering-template/actions/workflows/python-type.yml/badge.svg)](https://github.com/ministryofjustice/data-engineering-template/actions/workflows/python-type.yml)
+[![Release Container](https://github.com/ministryofjustice/data-engineering-template/actions/workflows/release-container.yml/badge.svg)](https://github.com/ministryofjustice/data-engineering-template/actions/workflows/release-container.yml)
+
 [![Ministry of Justice Repository Compliance Badge](https://github-community.service.justice.gov.uk/repository-standards/api/template-repository/badge)](https://github-community.service.justice.gov.uk/repository-standards/template-repository)
 
 This template repository equips you with the default initial files required for a Ministry of Justice GitHub repository.
