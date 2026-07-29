@@ -17,7 +17,7 @@ dev = [
     "ruff>=0.15.22",
 ]
 test = [
-    "pytest>=9.0.3",
+    "pytest>=9.1.1",
     "pytest-cov>=7.0.0"
 ]
 
