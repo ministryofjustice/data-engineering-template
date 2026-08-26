@@ -1,0 +1,44 @@
+# To run the pipeline locally with Docker, you can use the provided docker-compose.yml file. 
+# This file defines the services required to run the pipeline in a containerised environment.
+
+# Make sure you have Docker and Docker Compose installed on your machine.
+# Navigate to the root directory of the project.
+# Run the following command in terminal to start job_1:
+# docker-compose run --build --rm job_1
+
+x-build: &default-build
+  context: .
+  dockerfile: Dockerfile
+
+x-common-env: &common-env
+  AWS_PROFILE: ${AWS_PROFILE:?Variable AWS_PROFILE must be set and not empty}
+  USER: ${USER:?Variable USER must be set and not empty}
+
+  ENV: "test"
+  LOG_LEVEL: "INFO"
+  FULL_REFRESH: "false"
+  S3_LAND_DELETION_FLAG: "false"
+  SCRIPT_ENTRYPOINT: src/template.py
+
+x-common-volumes: &common-volumes
+  - ${HOME}/.aws:/opt/analyticalplatform/.aws:ro
+
+services:
+  job_1:
+    build: *default-build
+    image: mojap/template-pipeline:job_1
+    environment:
+      <<: *common-env
+      IMAGE_TAG: "job_1:dev"
+      SCRIPT_ENTRYPOINT: src/main.py # Can specify different entry point if required 
+      SERVICE: "job_1"
+    volumes: *common-volumes
+
+  job_2:
+    build: *default-build
+    image: mojap/template-pipeline:job_2
+    environment:
+      <<: *common-env
+      SERVICE: "job_2"
+    volumes: *common-volumes
+
