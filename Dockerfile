@@ -1,4 +1,4 @@
-FROM ghcr.io/ministryofjustice/analytical-platform-airflow-python-base:1.28.0@sha256:a0989a2bea050374220b102a7b2c5643666f80e23a95b1d5033e2dfdb8b350c4
+FROM ghcr.io/ministryofjustice/analytical-platform-airflow-python-base:1.46.0@sha256:551c5af72a3d93d2a772623d1773ace892a953580a871bb77de9d74d0e2c66b6
 
 ARG MOJAP_IMAGE_VERSION="default"
 ENV MOJAP_IMAGE_VERSION=${MOJAP_IMAGE_VERSION}
