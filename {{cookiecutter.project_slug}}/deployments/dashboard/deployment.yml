@@ -10,11 +10,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{cookiecutter.project_slug}}
-  namespace: {{cookiecutter.project_slug}}-{{ "{{environment}}" }}
+  namespace: {{cookiecutter.project_slug}}-${ENVIRONMENT}
   labels:
     app: {{cookiecutter.project_slug}}
     type: dashboard
-    version: {{ "{{image_tag}}" }}
+    version: ${IMAGE_TAG}
 spec:
   replicas: 1
   strategy:
@@ -26,7 +26,7 @@ spec:
     metadata:
       labels:
         app: {{cookiecutter.project_slug}}
-        version: {{ "{{image_tag}}" }}
+        version: ${IMAGE_TAG}
     spec:
       serviceAccountName: {{cookiecutter.project_slug}}
       securityContext:
@@ -35,7 +35,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: app
-          image: {{ "{{ecr_registry}}" }}/{{cookiecutter.project_slug}}:{{ "{{image_tag}}" }}
+          image: ${ECR_REGISTRY}/{{cookiecutter.project_slug}}:${IMAGE_TAG}
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -43,7 +43,7 @@ spec:
               protocol: TCP
           env:
             - name: ENVIRONMENT
-              value: dev  # {{environment}} - replace with actual environment
+              value: dev  # ${ENVIRONMENT} - replace with actual environment
             - name: LOG_LEVEL
               value: "INFO"
           resources:
