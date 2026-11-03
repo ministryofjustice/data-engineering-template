@@ -37,7 +37,7 @@ template = "template.main:main"
 [tool.mypy]
 strict = true
 disallow_untyped_defs = true
-exclude = ["migrations", "dist", "build", "typings", "tests"]
+exclude = ["migrations", "dist", "build", "typings", "tests", "{{cookiecutter.project_slug}}"]
 explicit_package_bases = true
 warn_unused_ignores = true
 show_error_codes = true

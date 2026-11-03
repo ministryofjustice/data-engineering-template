@@ -1,6 +1,3 @@
-# Kubernetes NetworkPolicy Configuration
-# API: Egress-only (DNS + HTTPS), no special ingress rules
-# Dashboard: Ingress from oauth2-proxy + prometheus, egress restricted
 {%- if cookiecutter.project_type == 'api' %}
 ---
 apiVersion: networking.k8s.io/v1

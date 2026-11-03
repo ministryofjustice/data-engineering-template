@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def lifespan(_app: FastAPI) -> AsyncGenerator:
+async def lifespan(_app: FastAPI) -> AsyncGenerator[None]:
     """Handle app startup and shutdown."""
     logger.info("Application starting up")
     yield
@@ -89,8 +89,6 @@ async def root() -> JSONResponse:
 if __name__ == "__main__":
     import uvicorn
 
-    # Run with: python -m src.template.app
-    # Or: uv run fastapi dev src/template/app.py
     uvicorn.run(
         "src.template.app:app",
         host="127.0.0.1",

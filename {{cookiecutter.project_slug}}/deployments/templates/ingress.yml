@@ -1,7 +1,3 @@
-# Kubernetes Ingress Configuration
-# API: internal-only, rate-limited
-# Dashboard: oauth2-proxy protected, ModSecurity enabled
-{%- if cookiecutter.project_type == 'api' %}
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -14,34 +10,9 @@ metadata:
     external-dns.alpha.kubernetes.io/set-identifier: {{cookiecutter.project_slug}}-ingress-{{cookiecutter.project_slug}}-green
     external-dns.alpha.kubernetes.io/aws-weight: "100"
     nginx.ingress.kubernetes.io/limit-rps: '10'
-spec:
-  ingressClassName: internal-non-prod
-  rules:
-    - host: ${PROJECT_HOST}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{cookiecutter.project_slug}}
-                port:
-                  number: 8080
-{%- elif cookiecutter.project_type == 'dashboard' %}
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{cookiecutter.project_slug}}
-  namespace: {{cookiecutter.project_slug}}-${ENVIRONMENT}
-  labels:
-    app: {{cookiecutter.project_slug}}
-  annotations:
+{%- if cookiecutter.project_type == 'dashboard' %}
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
-    nginx.ingress.kubernetes.io/limit-rps: '10'
     nginx.ingress.kubernetes.io/whitelist-source-range: ${ALLOWED_IPS}
-    external-dns.alpha.kubernetes.io/set-identifier: {{cookiecutter.project_slug}}-ingress-{{cookiecutter.project_slug}}-green
-    external-dns.alpha.kubernetes.io/aws-weight: '100'
     nginx.ingress.kubernetes.io/enable-modsecurity: 'true'
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       SecAuditEngine On
@@ -69,4 +40,17 @@ spec:
                 name: oauth2-proxy-service
                 port:
                   number: 4180
+{%- elif cookiecutter.project_type == 'api' %}
+  ingressClassName: internal-non-prod
+  rules:
+    - host: ${PROJECT_HOST}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{cookiecutter.project_slug}}
+                port:
+                  number: 8080
 {%- endif %}
