@@ -1,0 +1,32 @@
+"""{{ cookiecutter.project_name }} - API Backend."""
+
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+
+app = FastAPI(
+    title="{{ cookiecutter.project_name }}",
+    description="{{ cookiecutter.project_description }}",
+    version="0.1.0",
+)
+
+
+@app.get("/health")
+async def health() -> JSONResponse:
+    """Health check endpoint."""
+    return JSONResponse({"status": "healthy"}, status_code=200)
+
+
+@app.get("/ready")
+async def ready() -> JSONResponse:
+    """Readiness check endpoint."""
+    return JSONResponse({"status": "ready"}, status_code=200)
+
+
+@app.get("/")
+async def root() -> JSONResponse:
+    """Root endpoint."""
+    return JSONResponse({
+        "app": "{{ cookiecutter.project_name }}",
+        "version": "0.1.0",
+        "docs": "/docs",
+    })

@@ -1,0 +1,20 @@
+# Kubernetes Service
+# Exposes your deployment to the network
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{cookiecutter.project_slug}}
+  namespace: {{cookiecutter.project_slug}}-{{ "{{environment}}" }}
+  labels:
+    app: {{cookiecutter.project_slug}}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{cookiecutter.project_slug}}
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+      protocol: TCP
+  sessionAffinity: None

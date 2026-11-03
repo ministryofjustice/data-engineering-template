@@ -44,7 +44,7 @@ The template includes a CI/CD pipeline that:
 
 ### 1. Create Cloud Platform Namespace (MoJ)
 
-**This is the first step!** Infrastructure is managed via the Ministry of Justice Cloud Platform.
+**This is the first step.** Infrastructure is managed via the Ministry of Justice Cloud Platform.
 
 #### 1a. Create Namespace Configuration
 
@@ -124,7 +124,7 @@ KUBE_CERT                = (provided by Cloud Platform)
 KUBE_TOKEN               = (provided by Cloud Platform)
 ```
 
-**Variables** (Cloud Platform provides defaults, customize as needed):
+**Variables** (Cloud Platform provides defaults, customise as needed):
 ```
 ECR_REGION               = eu-west-2
 ECR_REPOSITORY           = (same as namespace name or specified in config)
@@ -133,7 +133,7 @@ APP_HOST                 = your-app.cloud-platform.service.justice.gov.uk
 CERT_SECRET_NAME         = your-app-tls
 ```
 
-#### 2d. Customize Workflows
+#### 2d. Customise Workflows
 
 The workflows are ready to use with minimal customisation:
 
@@ -166,7 +166,7 @@ In the `deployments/templates/` folder, customize these files for your applicati
 - **`clusterrole.yml`**: (Optional) RBAC permissions your app needs
 - **`clusterrolebinding.yml`**: (Optional) Binds ClusterRole to ServiceAccount
 
-Example customization for your application:
+Example customiation for your application:
 
 ```yaml
 # deployments/templates/deployment.yml
@@ -233,23 +233,6 @@ spec:
 
 ---
 
-## Workflow Triggers
-
-### `docker-publish.yml`
-
-Automatically runs:
-- **On PR**: Builds image, pushes to dev ECR
-- **On push to main**: Builds image, pushes to both dev and production ECR
-
-### `deploy-to-environment.yml`
-
-Manual trigger (Workflow Dispatch):
-- Go to Actions → "Deploy to Environment"
-- Select environment (dev, preprod, prod)
-- Specify version to deploy (git SHA, tag, or image tag)
-
----
-
 ## How It Works: Image Tagging
 
 Images are tagged with the **git commit SHA**:
@@ -259,64 +242,6 @@ Images are tagged with the **git commit SHA**:
          ↑
     First 7 chars of git SHA
 ```
-
-Benefits:
-- Every image is uniquely identified
-- You can trace image back to exact git commit
-- Deterministic deployments
-
-Example ECR image:
-```
-123456789012.dkr.ecr.eu-west-2.amazonaws.com/your-project:abc123d
-```
-
----
-
-## Troubleshooting
-
-### Docker Build Fails
-- Check Dockerfile syntax
-- Verify all dependencies are in `pyproject.toml`
-- Check file permissions in `docker-compose build`
-
-### ECR Push Fails
-- Verify AWS credentials/OIDC setup
-- Check ECR repository exists and policy allows push
-- Check `ECR_ROLE_TO_ASSUME` secret is correct
-- Check `ECR_REPOSITORY` variable is correct
-
-### Kubernetes Deployment Fails
-- Verify `KUBE_CERT`, `KUBE_TOKEN`, `KUBE_NAMESPACE` secrets
-- Check Kubernetes manifests are valid: `kubectl apply --dry-run=client -f deployments/templates/`
-- Verify service account and RBAC permissions
-- Check `APP_HOST` and other variables are set
-
-### Pods Won't Start
-- Check logs: `kubectl logs -n <namespace> <pod-name>`
-- Check pod status: `kubectl describe pod -n <namespace> <pod-name>`
-- Verify image exists in ECR and is accessible
-- Check resource requests/limits
-
----
-
-## Environment-Specific Configuration
-
-The template supports three environments. Customize for your needs:
-
-### Development
-- Automatic deployment on PR and main push
-- Lower resource limits
-- Enhanced logging/debugging
-
-### Preproduction
-- Manual deployment
-- Matches production configuration
-- Used for testing before prod
-
-### Production
-- Manual deployment (requires approval)
-- Higher resource limits
-- Restricted access
 
 ---
 
@@ -338,29 +263,3 @@ The template supports three environments. Customize for your needs:
 - Rotate service account tokens regularly
 - Monitor pod logs and events
 - Use Secrets for sensitive data (not ConfigMaps)
-
----
-
-## Next Steps
-
-1. **Set up AWS ECR and OIDC** (work with your infrastructure team)
-2. **Add secrets/variables to GitHub** using the setup guide above
-3. **Customize Kubernetes manifests** in `deployments/templates/`
-4. **Test locally** with Docker Compose:
-   ```bash
-   docker-compose build
-   docker-compose up
-   ```
-5. **Create a test PR** to trigger the workflow
-6. **Monitor the GitHub Actions run** and check ECR for the built image
-7. **Test manual deployment** (optional)
-
----
-
-## Additional Resources
-
-- [AWS ECR User Guide](https://docs.aws.amazon.com/AmazonECR/latest/userguide/)
-- [GitHub OIDC Documentation](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect)
-- [Kubernetes Documentation](https://kubernetes.io/docs/)
-- [cert-manager Documentation](https://cert-manager.io/)
-- [Dockerfile Best Practices](https://docs.docker.com/develop/dev-best-practices/)

@@ -1,0 +1,52 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "{{ cookiecutter.project_slug }}"
+version = "0.1.0"
+description = "{{ cookiecutter.project_description }}"
+license = "MIT"
+readme = "README.md"
+requires-python = ">={{ cookiecutter.python_version }}"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.20.1",
+    "ruff>=0.15.22",
+]
+test = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.0.0"
+]
+
+[tool.uv]
+package = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.mypy]
+strict = true
+disallow_untyped_defs = true
+exclude = ["migrations", "dist", "build", "typings", "tests"]
+explicit_package_bases = true
+warn_unused_ignores = true
+show_error_codes = true
+mypy_path = "src"
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report=term-missing"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D203",  # 1 blank line required before class docstring
+    "D213",  # Multi-line docstring summary should start at next line
+    "D100",  # Missing docstring in public module
+    "ANN101", # Missing type annotation for 'self'
+]
+
+[tool.ruff.format]
+line-length = 100

@@ -9,7 +9,10 @@ description = "A template repo for Data Engineering projects"
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "fastapi>=0.162.0",
+    "uvicorn>=0.54.0",
+]
 
 [dependency-groups]
 dev = [

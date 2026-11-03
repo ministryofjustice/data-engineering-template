@@ -62,7 +62,7 @@ jobs:
       - name: Image scan (optional)
         # Uncomment to scan images before pushing
         run: |
-          echo "Image scan step - configure as needed for your organization"
+          echo "Image scan step - configure as needed for your organisation"
           # aws ecr describe-images --repository-name ${{ vars.ECR_REPOSITORY }} ...
           # trivy image ${{ steps.image.outputs.uri }} ...
 
@@ -120,7 +120,7 @@ jobs:
           # This assumes your templates use environment variables
           # cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
 
-          echo "Manifests prepared (customize this step for your needs)"
+          echo "Manifests prepared (customise this step for your needs)"
 
       - name: Deploy to Kubernetes
         run: |
