@@ -62,46 +62,85 @@ Visit **http://localhost:8000** to see your project running.
 
 ## Kubernetes Deployment
 
-Each generated project includes complete Kubernetes manifests tailored to its type. The post-generation hook automatically selects the correct files:
+Each generated project includes **single, shared** Kubernetes manifests that use Jinja2 conditionals to adapt to the project type:
 
-### API Deployments
-- **Deployment**: `deployments/api/deployment.yml` (3 replicas, HA)
-- **Ingress**: `deployments/templates/ingress.yml` (internal-non-prod, rate-limited 10 RPS)
-- **Network Policy**: `deployments/templates/networkpolicy.yml` (egress-only: DNS + HTTPS)
-- **Setup**: 3 replicas with pod anti-affinity, rolling updates, health checks at /health and /ready
+### Files Generated
 
-### Dashboard Deployments
-- **Deployment**: `deployments/dashboard/deployment.yml` (1 replica)
-- **Ingress**: `deployments/templates/ingress.yml` (modsec class, oauth2-proxy protected)
-- **Network Policy**: `deployments/templates/networkpolicy.yml` (ingress from oauth2-proxy + prometheus)
-- **Setup**: 1 replica (no scaling), Recreate strategy, health checks at port 5000
+- **`deployments/api/deployment.yml` or `deployments/dashboard/deployment.yml`**
+  - Type-specific Deployment configuration
+  - API: 3 replicas, RollingUpdate strategy, HA pod anti-affinity
+  - Dashboard: 1 replica, Recreate strategy
 
-### Shared Resources
-All projects include:
-- **Service** (`deployments/templates/service.yml`): ClusterIP service exposing your app
-- **ServiceAccount** (`deployments/templates/serviceaccount.yml`): Pod identity for Cloud Platform integration
+- **`deployments/templates/ingress.yml`** (conditional content)
+  - API section: `internal-non-prod` class, rate-limited (10 RPS), direct backend
+  - Dashboard section: `modsec` class, oauth2-proxy protection, ModSecurity WAF
 
-**Note**: The post-generation hook automatically selects type-specific ingress and networkpolicy files, then removes the unused ones. Generated projects only contain the files they need.
+- **`deployments/templates/networkpolicy.yml`** (conditional content)
+  - API section: Egress-only (DNS + HTTPS)
+  - Dashboard section: Ingress from oauth2-proxy + prometheus, restricted egress
+
+- **`deployments/templates/service.yml`, `serviceaccount.yml`** (shared)
+  - Used by both API and dashboard projects
+
+### Template Variables
+
+Generated projects use placeholder variables in `${UPPERCASE}` format that must be filled in by users during Cloud Platform setup:
+
+- **`${ENVIRONMENT}`** → Kubernetes namespace suffix (dev/staging/prod)
+- **`${PROJECT_HOST}`** → DNS hostname for ingress
+- **`${IMAGE_TAG}`** → Docker image version/tag
+- **`${ECR_REGISTRY}`** → AWS ECR registry URL
+- **`${ALLOWED_IPS}`** → IP ranges (dashboard only, for modsecurity whitelist)
+- **`${GITHUB_TEAM}`** → Your GitHub team (dashboard only, for audit logs)
+
+These are NOT filled by cookiecutter—they're meant for manual configuration by Cloud Platform operators.
 
 ---
 
-## Next Steps
+## Next Steps After Generation
 
-### 1. Fill in placeholder values
-Your generated project contains template variables like `{{environment}}`, `{{project_host}}`, `{{allowed_ips}}`. Replace these with actual values:
-- Cloud Platform namespaces auto-populate these in CI/CD pipelines
-- See `CLOUD_DEPLOYMENT.md` for integration details
+### 1. Fill in Cloud Platform Variables
+
+The generated project contains placeholder variables (in `${VAR}` format) that must be replaced during Cloud Platform namespace setup:
+
+**In `deployments/templates/ingress.yml`:**
+- `${ENVIRONMENT}` → dev/staging/prod
+- `${PROJECT_HOST}` → your.domain.cloud-platform.service.justice.gov.uk
+
+**In all deployment files:**
+- `${ENVIRONMENT}` → dev/staging/prod
+- `${IMAGE_TAG}` → Image version (e.g., v1.0.0, latest)
+- `${ECR_REGISTRY}` → AWS ECR registry URL (e.g., 123456789.dkr.ecr.eu-west-1.amazonaws.com)
+
+**For Dashboard projects in `deployments/templates/ingress.yml`:**
+- `${ALLOWED_IPS}` → IP ranges for whitelist (e.g., 10.0.0.0/8, 203.0.113.0/24)
+- `${GITHUB_TEAM}` → Your GitHub team name for audit logs
 
 ### 2. Deploy to Cloud Platform
-Each project scaffolds a `deployments/` directory ready for MoJ Cloud Platform:
+
 ```bash
-# In your cloud-platform-environments PR
-namespaces/live.cloud-platform.service.justice.gov.uk/hmpps-electronic-monitoring-data-dashboard/
+# 1. Create namespace in cloud-platform-environments
+cd ~/cloud-platform-environments
+mkdir -p namespaces/live.cloud-platform.service.justice.gov.uk/my-project-dev
+cp -r /path/to/generated/deployments/templates/* namespaces/.../
+
+# 2. Replace all ${VAR} placeholders in your YAML files
+sed -i 's/${ENVIRONMENT}/dev/g' namespaces/.../deployments/**/*.yml
+sed -i 's/${IMAGE_TAG}/v1.0.0/g' namespaces/.../deployments/**/*.yml
+# ... etc for all variables
+
+# 3. Submit PR to cloud-platform-environments
+git add namespaces/
+git commit -m "Add my-project namespace with K8s manifests"
+git push origin -u feature/my-project
 ```
 
-### 3. View example implementations
-- **API example**: See `src/template/app.py` (production FastAPI with logging, config, health endpoints)
-- **Dashboard example**: See generated dashboard stub (Streamlit starter template)
+### 3. Configure CI/CD
+
+Update your repository's GitHub Actions to:
+1. Build and push Docker image to ECR with proper tag
+2. Update deployment manifests with actual `${IMAGE_TAG}`
+3. Deploy using kubectl or GitOps tool
 
 ---
 
