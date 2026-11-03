@@ -1,0 +1,32 @@
+# Example Kubernetes Service manifest
+# This exposes your deployment to the network
+#
+# CUSTOMIZE: Adjust ports, selectors, and type as needed
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${APP_NAME:-de-template}
+  namespace: ${KUBE_NAMESPACE}
+  labels:
+    app: ${APP_NAME:-de-template}
+    environment: ${ENV_SHORT:-dev}
+spec:
+  type: ClusterIP
+  selector:
+    app: ${APP_NAME:-de-template}
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8000
+      protocol: TCP
+  # CUSTOMIZE: Add additional ports if needed
+  # - name: grpc
+  #   port: 50051
+  #   targetPort: 50051
+  #   protocol: TCP
+  sessionAffinity: None
+  # Only if type is LoadBalancer
+  # loadBalancerIP: 10.0.0.1
+  # loadBalancerSourceRanges:
+  #   - 192.168.0.0/24

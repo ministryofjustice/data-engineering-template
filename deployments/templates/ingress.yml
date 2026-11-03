@@ -1,0 +1,61 @@
+# Example Kubernetes Ingress with TLS
+# This exposes your service to the internet
+#
+# Prerequisites:
+#   - cert-manager must be installed in the cluster
+#   - A ClusterIssuer named 'letsencrypt' or similar must exist
+#   - Your domain DNS must be configured to point to the ingress controller
+#
+# CUSTOMIZE: Update hostname, TLS certificate name, and annotations
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ${APP_NAME:-de-template}
+  namespace: ${KUBE_NAMESPACE}
+  labels:
+    app: ${APP_NAME:-de-template}
+    environment: ${ENV_SHORT:-dev}
+  annotations:
+    # TLS certificate provisioning via cert-manager
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # CUSTOMIZE: Add ingress controller annotations as needed
+    # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    # nginx.ingress.kubernetes.io/ssl-protocols: "TLSv1.2 TLSv1.3"
+    # nginx.ingress.kubernetes.io/auth-type: "oauth2"
+    # nginx.ingress.kubernetes.io/auth-signin: "https://oauth.example.com"
+    # nginx.ingress.kubernetes.io/auth-url: "https://oauth.example.com/auth"
+    # Security headers
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+spec:
+  ingressClassName: nginx
+  # TLS configuration
+  tls:
+    - hosts:
+        - ${APP_HOST:-example.com}
+      secretName: ${CERT_SECRET_NAME:-de-template-tls}
+  rules:
+    - host: ${APP_HOST:-example.com}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ${APP_NAME:-de-template}
+                port:
+                  name: http
+  # CUSTOMIZE: Add additional hosts if needed
+  # - host: api.example.com
+  #   http:
+  #     paths:
+  #       - path: /
+  #         pathType: Prefix
+  #         backend:
+  #           service:
+  #             name: ${APP_NAME}-api
+  #             port:
+  #               name: http

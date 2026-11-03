@@ -90,7 +90,22 @@ If your repository is private with no GitHub Advanced Security license, remove t
 Remove workflows that you do not need for your project.
 Some reusable workflows take arguments to configure their behaviour (e.g., python-unit-test) - configure them according to your needs
 
-## AP airflow workflows
+## Documentation
+
+### For New Projects Using This Template
+
+- **[CLOUD_DEPLOYMENT.md](./CLOUD_DEPLOYMENT.md)** — Complete guide to Cloud Platform setup, GitHub workflows, and Kubernetes deployment
+- **[SERVICE_CATALOGUE.md](./SERVICE_CATALOGUE.md)** — How to register your project in MoJ's Service Catalogue
+
+### For Existing Project Maintainers
+
+- Review the included workflows below
+- Customize deployments in [`deployments/`](./deployments/)
+- Extend examples in [`src/`](./src/)
+
+## Workflows
+
+### AP airflow workflows
 
 These workflows are a requirement for deploying images to the EKS for use in airflow:
 
