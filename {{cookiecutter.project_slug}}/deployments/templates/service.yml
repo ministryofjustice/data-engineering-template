@@ -5,7 +5,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{cookiecutter.project_slug}}
-  namespace: {{cookiecutter.project_slug}}-{{ "{{environment}}" }}
+  namespace: {{cookiecutter.project_slug}}-${ENVIRONMENT}
   labels:
     app: {{cookiecutter.project_slug}}
 spec:
