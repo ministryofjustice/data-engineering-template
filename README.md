@@ -75,7 +75,7 @@ The pyproject.toml contains various placeholders for the template. Update the fi
 
 ### Update CODEOWNERS
 
-(Optional) Modify the CODEOWNERS file to specify the teams or users authorized to approve pull requests.
+(Optional) Modify the CODEOWNERS file to specify the teams or users authoried to approve pull requests.
 
 ### Configure Dependabot
 
@@ -96,12 +96,13 @@ Some reusable workflows take arguments to configure their behaviour (e.g., pytho
 
 - **[CLOUD_DEPLOYMENT.md](./CLOUD_DEPLOYMENT.md)** — Complete guide to Cloud Platform setup, GitHub workflows, and Kubernetes deployment
 - **[SERVICE_CATALOGUE.md](./SERVICE_CATALOGUE.md)** — How to register your project in MoJ's Service Catalogue
+- **[FASTAPI_TEMPLATE.md](./FASTAPI_TEMPLATE.md)** — Quick start guide for building REST APIs with FastAPI
 
 ### For Existing Project Maintainers
 
 - Review the included workflows below
-- Customize deployments in [`deployments/`](./deployments/)
-- Extend examples in [`src/`](./src/)
+- Customise deployments in [`deployments/`](./deployments/)
+- Use FastAPI example in [`src/template/app.py`](./src/template/app.py) as a starting point
 
 ## Workflows
 

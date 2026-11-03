@@ -1,0 +1,20 @@
+{
+  "allowed_ips": "0.0.0.0/0",
+  "author": "Ministry of Justice",
+  "ecr_registry": "YOUR_ECR_REGISTRY_HERE",
+  "environment": "dev",
+  "github_team": "data-engineering",
+  "image_tag": "latest",
+  "project_description": "A Ministry of Justice data engineering project",
+  "project_host": "my-project.cloud-platform.service.justice.gov.uk",
+  "project_name": "My Data Project",
+  "project_slug": "{{ cookiecutter.project_name | lower | replace('-', '_') | replace(' ', '_') }}",
+  "project_type": [
+    "api",
+    "dashboard"
+  ],
+  "python_version": [
+    "3.13",
+    "3.14"
+  ]
+}

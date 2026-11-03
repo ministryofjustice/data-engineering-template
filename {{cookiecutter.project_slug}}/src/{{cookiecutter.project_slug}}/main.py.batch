@@ -1,0 +1,12 @@
+"""{{ cookiecutter.project_name }} - Batch Processing."""
+
+
+def main() -> None:
+    """Main batch processing function."""
+    print("{{ cookiecutter.project_name }} - Batch Job")
+    print("{{ cookiecutter.project_description }}")
+    print("Add your data processing logic here")
+
+
+if __name__ == "__main__":
+    main()
