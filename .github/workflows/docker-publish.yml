@@ -8,12 +8,12 @@ name: Publish Docker Image
 #   - On pull request: builds, pushes and deploys to development environment
 #   - On push to main: builds, pushes and deploys to both development and production
 
-on:
-  pull_request:
-    types: [opened, reopened, synchronize, edited]
-  push:
-    branches:
-      - main
+# on:
+#   pull_request:
+#     types: [opened, reopened, synchronize, edited]
+#   push:
+#     branches:
+#       - main
 
 permissions:
   id-token: write
