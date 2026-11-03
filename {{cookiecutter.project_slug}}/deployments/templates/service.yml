@@ -1,5 +1,3 @@
-# Kubernetes Service
-# Exposes your deployment to the network
 ---
 apiVersion: v1
 kind: Service
