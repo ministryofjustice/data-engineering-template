@@ -1,0 +1,47 @@
+---
+name: Publish Docker Image
+
+# This workflow orchestrates building and pushing Docker images to ECR
+# It calls the reusable workflow for each environment
+#
+# Triggers:
+#   - On pull request: builds, pushes and deploys to development environment
+#   - On push to main: builds, pushes and deploys to both development and production
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, edited]
+  push:
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  publish-development:
+    name: Publish to development
+    uses: ./.github/workflows/docker-build-push-template.yml
+    with:
+      environment: development
+    secrets:
+      ECR_ROLE_TO_ASSUME: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+
+  publish-preproduction:
+    name: Publish to preproduction
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/docker-build-push-template.yml
+    with:
+      environment: preproduction
+    secrets:
+      ECR_ROLE_TO_ASSUME: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+
+  publish-production:
+    name: Publish to production
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    uses: ./.github/workflows/docker-build-push-template.yml
+    with:
+      environment: production
+    secrets:
+      ECR_ROLE_TO_ASSUME: ${{ secrets.ECR_ROLE_TO_ASSUME }}

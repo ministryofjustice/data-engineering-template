@@ -1,0 +1,158 @@
+---
+name: Docker Build and Push (Template)
+
+# This is a REUSABLE WORKFLOW called by docker-publish.yml
+# Use this to build and push Docker images to AWS ECR for different environments
+
+on:
+  workflow_call:
+    secrets:
+      ECR_ROLE_TO_ASSUME:
+        description: AWS IAM role ARN to assume for OIDC authentication
+        required: true
+    inputs:
+      environment:
+        description: Deployment environment (development, preproduction, production)
+        required: true
+        type: string
+        default: development
+
+permissions:
+  id-token: write  # Required for AWS OIDC
+  contents: read
+
+jobs:
+  build-and-push:
+    name: Build and push to ECR (${{ inputs.environment }})
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502  # v4.0.2
+        with:
+          role-to-assume: ${{ secrets.ECR_ROLE_TO_ASSUME }}
+          aws-region: ${{ vars.ECR_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076  # v2.0.1
+        id: login-ecr
+
+      - name: Build and push Docker image
+        id: image
+        run: |
+          REGISTRY="${{ steps.login-ecr.outputs.registry }}"
+          REPOSITORY="${{ vars.ECR_REPOSITORY }}"
+          IMAGE_TAG="${{ github.sha }}"
+          IMAGE_URI="${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}"
+
+          echo "Building image: ${IMAGE_URI}"
+          docker build -t "${IMAGE_URI}" .
+          docker push "${IMAGE_URI}"
+
+          echo "uri=${IMAGE_URI}" >> "$GITHUB_OUTPUT"
+          echo "tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+
+          echo "Image pushed successfully"
+          echo "Image URI: ${IMAGE_URI}"
+
+      - name: Image scan (optional)
+        # Uncomment to scan images before pushing
+        run: |
+          echo "Image scan step - configure as needed for your organization"
+          # aws ecr describe-images --repository-name ${{ vars.ECR_REPOSITORY }} ...
+          # trivy image ${{ steps.image.outputs.uri }} ...
+
+      - name: Set environment variables
+        id: env-vars
+        run: |
+          case "${{ inputs.environment }}" in
+            development)
+              echo "ENV_SHORT=dev" >> "$GITHUB_OUTPUT"
+              ;;
+            preproduction)
+              echo "ENV_SHORT=preprod" >> "$GITHUB_OUTPUT"
+              ;;
+            production)
+              echo "ENV_SHORT=prod" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "Unknown environment: ${{ inputs.environment }}"
+              exit 1
+              ;;
+          esac
+
+      - name: Setup kubectl
+        run: |
+          # Configure kubectl with credentials from GitHub secrets
+          set +x
+          echo "${{ secrets.KUBE_CERT }}" > ca.crt
+
+          kubectl config set-cluster ${{ secrets.KUBE_CLUSTER }} \
+            --certificate-authority=./ca.crt \
+            --server=https://${{ secrets.KUBE_CLUSTER }}
+
+          kubectl config set-credentials deploy-user \
+            --token=${{ secrets.KUBE_TOKEN }}
+
+          kubectl config set-context ${{ secrets.KUBE_CLUSTER }} \
+            --cluster=${{ secrets.KUBE_CLUSTER }} \
+            --user=deploy-user \
+            --namespace=${{ secrets.KUBE_NAMESPACE }}
+
+          kubectl config use-context ${{ secrets.KUBE_CLUSTER }}
+
+          echo "kubectl configured"
+          set -x
+
+      - name: Prepare manifests
+        run: |
+          # Substitute environment variables in manifests
+          export IMAGE_TAG=${{ steps.image.outputs.tag }}
+          export KUBE_NAMESPACE=${{ secrets.KUBE_NAMESPACE }}
+          export APP_HOST=${{ vars.APP_HOST }}
+          export ENV_SHORT=${{ steps.env-vars.outputs.ENV_SHORT }}
+
+          # Example: create final manifests from templates
+          # This assumes your templates use environment variables
+          # cat deployments/templates/deployment.yml | envsubst > deployments/deployment.yml
+
+          echo "Manifests prepared (customize this step for your needs)"
+
+      - name: Deploy to Kubernetes
+        run: |
+          NAMESPACE=${{ secrets.KUBE_NAMESPACE }}
+
+          echo "Deploying to namespace: ${NAMESPACE}"
+
+          # Apply Kubernetes manifests
+          # kubectl -n ${NAMESPACE} apply -f deployments/deployment.yml
+          # kubectl -n ${NAMESPACE} apply -f deployments/service.yml
+          # kubectl -n ${NAMESPACE} apply -f deployments/ingress.yml
+
+          echo "✅ Deployment complete"
+          echo ""
+          echo "To verify deployment:"
+          echo "  kubectl -n ${NAMESPACE} get pods -l app=${{ vars.APP_NAME }}"
+          echo "  kubectl -n ${NAMESPACE} logs -l app=${{ vars.APP_NAME }}"
+
+      - name: Wait for rollout
+        run: |
+          NAMESPACE=${{ secrets.KUBE_NAMESPACE }}
+          APP_LABEL="app=${{ vars.APP_NAME }}"
+
+          echo "Waiting for rollout to complete..."
+          # kubectl -n ${NAMESPACE} wait --for=condition=available --timeout=300s deployment/${APP_LABEL}
+
+          echo "Rollout complete"
+
+      - name: Post-deployment verification
+        run: |
+          NAMESPACE=${{ secrets.KUBE_NAMESPACE }}
+          echo "Checking deployment status..."
+          # kubectl -n ${NAMESPACE} get pods -l app=${{ vars.APP_NAME }}
+          # kubectl -n ${NAMESPACE} get svc -l app=${{ vars.APP_NAME }}
+          echo "Post-deployment checks passed"
