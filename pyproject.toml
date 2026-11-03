@@ -14,6 +14,7 @@ dependencies = []
 [dependency-groups]
 dev = [
     "mypy>=1.20.1",
+    "pytest-mypy-plugins>=4.1.0",
     "ruff>=0.15.22",
 ]
 test = [
@@ -33,7 +34,7 @@ template = "template.main:main"
 [tool.mypy]
 strict = true
 disallow_untyped_defs = true
-exclude = "migrations|dist|build|typings"
+exclude = ["migrations", "dist", "build", "typings", "tests"]
 explicit_package_bases = true
 warn_unused_ignores = true
 show_error_codes = true
