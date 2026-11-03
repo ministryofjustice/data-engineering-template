@@ -120,11 +120,9 @@ You may find that different extensions (e.g., yaml) will conflict with other set
 
 ### docker-compose
 
-The docker-compose.yml defines how to build and run the pipeline components inside Docker. 
+The docker-compose.yml defines how to build and run the pipeline components inside Docker.
 It provides a consistent execution environment both for local development and when orchestrated in Airflow.
 
-If the docker-compose runs fine locally, you can generally assume that your code will not break in Airflow either. 
+If the docker-compose runs fine locally, you can generally assume that your code will not break in Airflow either.
 
 Make sure you have Docker (the desktop application) and Docker Compose installed and set up on your machine.
-
-
