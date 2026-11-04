@@ -1,8 +1,6 @@
 {
   "_copy_without_render": [
-    ".github/workflows/*",
-    "*.yml",
-    "*.yaml"
+    ".github/workflows/*"
   ],
   "author": "Ministry of Justice",
   "project_description": "A Ministry of Justice data engineering project",

@@ -12,7 +12,7 @@ repos:
       - id: check-toml
         exclude: "{{cookiecutter.project_slug}}/pyproject.toml"
       - id: check-yaml
-        exclude: "{{cookiecutter.project_slug}}/deployments/templates/.*\\.yml"
+        exclude: "{{cookiecutter.project_slug}}/deployments/.*\\.yml"
       - id: debug-statements
         exclude: "{{cookiecutter.project_slug}}/tests/unit/"
       - id: detect-private-key
@@ -75,7 +75,7 @@ repos:
     rev: v1.37.1
     hooks:
       - id: yamllint
-        exclude: "{{cookiecutter.project_slug}}/deployments/templates/.*\\.yml"
+        exclude: "{{cookiecutter.project_slug}}/deployments/.*\\.yml"
 
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 3.4.1

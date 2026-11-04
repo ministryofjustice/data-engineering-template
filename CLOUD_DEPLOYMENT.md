@@ -138,7 +138,7 @@ CERT_SECRET_NAME         = your-app-tls
 The workflows are ready to use with minimal customisation:
 
 1. **`.github/workflows/docker-publish.yml`** - Already configured, no changes needed
-2. **`.github/workflows/docker-build-push-template.yml`** - Already configured, no changes needed
+2. **`.github/workflows/docker-build-push-template.yml`**  -Already configured, no changes needed
 3. **`.github/workflows/deploy-to-environment.yml`** - Customise if you need manual deployment
 
 For most projects, **you don't need to modify the workflows** - they work with the Cloud Platform setup.
@@ -146,13 +146,6 @@ For most projects, **you don't need to modify the workflows** - they work with t
 ---
 
 ### 3. Kubernetes Configuration
-
-The Cloud Platform automatically creates:
-- Kubernetes namespace
-- Service accounts with IRSA
-- IAM roles and policies
-- Network policies
-- TLS certificates
 
 #### 3a. Customize Kubernetes Manifests
 
@@ -163,8 +156,6 @@ In the `deployments/templates/` folder, customize these files for your applicati
 - **`ingress.yml`**: Update hostname (use cloud-platform subdomain)
 - **`networkpolicy.yml`**: Configure allowed traffic (Cloud Platform defaults are restrictive)
 - **`serviceaccount.yml`**: Service account for your application pods
-- **`clusterrole.yml`**: (Optional) RBAC permissions your app needs
-- **`clusterrolebinding.yml`**: (Optional) Binds ClusterRole to ServiceAccount
 
 Example customiation for your application:
 
@@ -230,36 +221,3 @@ spec:
             port:
               name: http
 ```
-
----
-
-## How It Works: Image Tagging
-
-Images are tagged with the **git commit SHA**:
-
-```
-123456789abcdef@latest
-         ↑
-    First 7 chars of git SHA
-```
-
----
-
-## Security Considerations
-
-**Best Practices Included:**
-- AWS OIDC authentication (no static credentials)
-- Network policies to restrict traffic
-- Non-root container security context
-- Read-only root filesystem
-- Resource limits
-- Health checks (liveness/readiness)
-
-**Additional Hardening (Do These):**
-- Enable ECR image scanning
-- Set up pod security standards
-- Use private ECR repositories
-- Implement network policies with IP allowlist
-- Rotate service account tokens regularly
-- Monitor pod logs and events
-- Use Secrets for sensitive data (not ConfigMaps)
