@@ -53,12 +53,24 @@ if project_type != "data-pipeline":
         batch_stub.unlink()
         print(f"🗑️  Removed main.py.batch (not needed for {project_type})")
 
-# 4. Remove deployments directory for data-pipeline (no Kubernetes needed)
-if project_type == "data-pipeline":
-    deployments_dir = root / "deployments"
-    if deployments_dir.exists():
+# 4. Clean up unused deployment type directories
+deployments_dir = root / "deployments"
+if deployments_dir.exists():
+    if project_type == "data-pipeline":
+        # Remove all deployments for data-pipeline (no Kubernetes needed)
         shutil.rmtree(deployments_dir)
         print("🗑️  Removed deployments/ (not needed for data-pipeline)")
+    else:
+        # For API and Dashboard, keep templates but remove unused type directories
+        api_dir = deployments_dir / "api"
+        dashboard_dir = deployments_dir / "dashboard"
+
+        if project_type == "api" and dashboard_dir.exists():
+            shutil.rmtree(dashboard_dir)
+            print("🗑️  Removed deployments/dashboard/ (not needed for api)")
+        elif project_type == "dashboard" and api_dir.exists():
+            shutil.rmtree(api_dir)
+            print("🗑️  Removed deployments/api/ (not needed for dashboard)")
 
 # 5. Update pyproject.toml with type-specific dependencies
 pyproject_path = root / "pyproject.toml"
