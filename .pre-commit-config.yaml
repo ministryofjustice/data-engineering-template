@@ -12,7 +12,8 @@ repos:
       - id: check-toml
         exclude: "{{cookiecutter.project_slug}}/pyproject.toml"
       - id: check-yaml
-        exclude: "\\{\\{cookiecutter.project_slug\\}\\}/deployments/.*\\.yml"
+        exclude: "{{cookiecutter.project_slug}}/"
+        files: "^(?!.*{{cookiecutter)"
       - id: debug-statements
         exclude: "{{cookiecutter.project_slug}}/tests/unit/"
       - id: detect-private-key
@@ -42,10 +43,10 @@ repos:
       - id: ruff
         types_or: [python, pyi, jupyter]
         args: [--fix]
-        exclude: "^\\{\\{cookiecutter"
+        files: "^(src/|tests/|hooks/)"
       - id: ruff-format
         types_or: [python, pyi, jupyter]
-        exclude: "^\\{\\{cookiecutter"
+        files: "^(src/|tests/|hooks/)"
 
   - repo: local
     hooks:
@@ -60,6 +61,7 @@ repos:
     rev: v1.5.0
     hooks:
       - id: detect-secrets
+        exclude: "{{cookiecutter.project_slug}}/deployments"
 
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.6
@@ -75,7 +77,8 @@ repos:
     rev: v1.37.1
     hooks:
       - id: yamllint
-        exclude: "\\{\\{cookiecutter.project_slug\\}\\}/deployments/.*\\.yml"
+        exclude: "{{cookiecutter.project_slug}}/"
+        files: "^(?!.*{{cookiecutter)"
 
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 3.4.1

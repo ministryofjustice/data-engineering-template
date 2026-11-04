@@ -14,6 +14,7 @@ dependencies = []
 [dependency-groups]
 dev = [
     "mypy>=1.20.1",
+    "pytest>=9.1.1",
     "ruff>=0.15.22",
 ]
 test = [
@@ -40,14 +41,24 @@ mypy_path = "src"
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=term-missing"
 
+[tool.ruff]
+line-length = 100
+
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
     "D203",  # 1 blank line required before class docstring
     "D213",  # Multi-line docstring summary should start at next line
     "D100",  # Missing docstring in public module
-    "ANN101", # Missing type annotation for 'self'
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "ARG",     # unused arguments in test functions
+    "S101",    # use of assert is fine for tests
+    "SLF001",  # accessing private members is OK for tests
+    "PLR2004", # magic values in tests are acceptable
+    "D101",    # missing docstring in test class
 ]
 
 [tool.ruff.format]
-line-length = 100

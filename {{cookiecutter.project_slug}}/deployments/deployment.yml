@@ -1,3 +1,4 @@
+---
 {%- if cookiecutter.project_type == 'api' %}
 # Kubernetes Deployment for FastAPI Backend
 # High-availability API with multiple replicas, load balancing, health checks
@@ -7,7 +8,6 @@
 # - replicas: For autoscaling
 # - resources: For performance tuning
 # - env: For your application configuration
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -174,7 +174,7 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 3
-              failureThreshold: 2
+            failureThreshold: 2
           volumeMounts:
             - name: tmp
               mountPath: /tmp

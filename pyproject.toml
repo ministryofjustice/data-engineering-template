@@ -43,6 +43,8 @@ mypy_path = "src"
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=term-missing"
 
+[tool.ruff]
+
 [tool.ruff.lint]
 select = ["ALL"]
 # Remove warnings

@@ -1,5 +1,5 @@
-{%- if cookiecutter.project_type == 'api' %}
 ---
+{%- if cookiecutter.project_type == 'api' %}
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
