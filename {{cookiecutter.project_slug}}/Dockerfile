@@ -40,9 +40,8 @@ EXPOSE 8000
 # FastAPI API
 ENTRYPOINT ["python", "-m", "uvicorn", "{{ cookiecutter.project_slug }}.app:app", "--host", "0.0.0.0", "--port", "8000"]
 {% elif cookiecutter.project_type == 'dashboard' %}
-# Streamlit Dashboard
-ENTRYPOINT ["streamlit", "run", "src/{{ cookiecutter.project_slug }}/app.py", "--server.port=8000", "--server.address=0.0.0.0"]
+# Dashboard (blank for now)
+ENTRYPOINT []
 {% elif cookiecutter.project_type == 'batch' %}
-# Batch processing
 ENTRYPOINT ["python", "-m", "{{ cookiecutter.project_slug }}.main"]
 {% endif %}
