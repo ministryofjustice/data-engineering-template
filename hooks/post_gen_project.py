@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Copyright (c) Ministry of Justice. All rights reserved.
 """Post-generation hook for cookiecutter template.
 
 This script runs after cookiecutter generates a new project and:

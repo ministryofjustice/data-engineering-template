@@ -57,6 +57,7 @@ ignore = [
     "COM812", # Trailing comma missing
     "T201", # No print statements
     "INP001", # File is part of an implicit namespace package (tests/ doesn't need __init__.py)
+    "CPY001",
 ]
 
 [tool.ruff.lint.per-file-ignores]
