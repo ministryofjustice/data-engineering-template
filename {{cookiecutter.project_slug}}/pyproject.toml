@@ -1,0 +1,66 @@
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[project]
+name = "{{ cookiecutter.project_slug }}"
+version = "0.1.0"
+description = "{{ cookiecutter.project_description }}"
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "mypy>=1.20.1",
+    "pytest>=9.1.1",
+    "ruff>=0.15.22",
+]
+test = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.0.0",
+    "httpx>=0.28.1",
+]
+
+[tool.uv]
+package = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.mypy]
+strict = true
+disallow_untyped_defs = true
+exclude = ["migrations", "dist", "build", "typings", "tests"]
+explicit_package_bases = true
+warn_unused_ignores = true
+show_error_codes = true
+mypy_path = "src"
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D203",  # 1 blank line required before class docstring
+    "D213",  # Multi-line docstring summary should start at next line
+    "D100",  # Missing docstring in public module
+    "INP001", # File is part of an implicit namespace package (tests/ doesn't need __init__.py)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "ARG",     # unused arguments in test functions
+    "S101",    # use of assert is fine for tests
+    "SLF001",  # accessing private members is OK for tests
+    "PLR2004", # magic values in tests are acceptable
+    "D101",    # missing docstring in test class
+]
+
+[tool.ruff.format]

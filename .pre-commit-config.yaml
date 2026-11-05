@@ -10,8 +10,11 @@ repos:
       - id: check-merge-conflict
       - id: check-symlinks
       - id: check-toml
+        exclude: "{{cookiecutter.project_slug}}/"
       - id: check-yaml
+        exclude: "{{cookiecutter.project_slug}}/"
       - id: debug-statements
+        exclude: "{{cookiecutter.project_slug}}/"
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: mixed-line-ending
@@ -39,8 +42,12 @@ repos:
       - id: ruff
         types_or: [python, pyi, jupyter]
         args: [--fix]
+        files: "^(src/|tests/|hooks/)"
+        exclude: "{{cookiecutter.project_slug}}/"
       - id: ruff-format
         types_or: [python, pyi, jupyter]
+        files: "^(src/|tests/|hooks/)"
+        exclude: "{{cookiecutter.project_slug}}/"
 
   - repo: local
     hooks:
@@ -50,11 +57,13 @@ repos:
         language: system
         pass_filenames: false
         types: [python]
+        exclude: "{{cookiecutter.project_slug}}/"
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
     hooks:
       - id: detect-secrets
+        exclude: "{{cookiecutter.project_slug}}/deployments"
 
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.6
@@ -70,6 +79,7 @@ repos:
     rev: v1.37.1
     hooks:
       - id: yamllint
+        exclude: "{{cookiecutter.project_slug}}/"
 
   - repo: https://github.com/sqlfluff/sqlfluff
     rev: 3.4.1

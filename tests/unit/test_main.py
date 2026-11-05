@@ -1,3 +1,4 @@
+# Copyright (c) Ministry of Justice. All rights reserved.
 """Test main functions."""
 
 import pytest

@@ -1,0 +1,14 @@
+"""{{ cookiecutter.project_name }} - Airflow Pipeline."""
+
+import logging
+
+logger = logging.getLogger(__name__)
+
+def main() -> None:
+    """Process the main pipeline logic."""
+    logger.info("{{ cookiecutter.project_name }} - Airflow Pipeline Job")
+    logger.info("{{ cookiecutter.project_description }}")
+
+
+if __name__ == "__main__":
+    main()
