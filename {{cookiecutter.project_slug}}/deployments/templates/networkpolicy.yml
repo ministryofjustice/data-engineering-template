@@ -1,0 +1,134 @@
+---
+{%- if cookiecutter.project_type == 'api' %}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{cookiecutter.project_slug}}-egress
+  namespace: {{cookiecutter.project_slug}}-${ENVIRONMENT}
+  labels:
+    app: {{cookiecutter.project_slug}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{cookiecutter.project_slug}}
+  policyTypes:
+    - Egress
+  egress:
+    # DNS (kube-dns)
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # HTTPS outbound
+    - ports:
+        - protocol: TCP
+          port: 443
+{%- elif cookiecutter.project_type == 'dashboard' %}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{cookiecutter.project_slug}}-ingress
+  namespace: {{cookiecutter.project_slug}}-${ENVIRONMENT}
+  labels:
+    app: {{cookiecutter.project_slug}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{cookiecutter.project_slug}}
+  policyTypes:
+    - Ingress
+  ingress:
+    # Only from oauth2-proxy
+    - from:
+        - podSelector:
+            matchLabels:
+              app: oauth2-proxy
+      ports:
+        - protocol: TCP
+          port: 5000
+
+---
+# Allow Prometheus (monitoring namespace) to scrape the app
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-prometheus-scraping
+  namespace: {{cookiecutter.project_slug}}-${ENVIRONMENT}
+  labels:
+    app: {{cookiecutter.project_slug}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{cookiecutter.project_slug}}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              component: monitoring
+      ports:
+        - protocol: TCP
+          port: 5000
+
+---
+# oauth2-proxy NetworkPolicy: Allow ingress controller traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: oauth2-proxy-ingress
+  namespace: {{cookiecutter.project_slug}}-${ENVIRONMENT}
+spec:
+  podSelector:
+    matchLabels:
+      app: oauth2-proxy
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              component: ingress-controllers
+      ports:
+        - protocol: TCP
+          port: 4180
+
+---
+# Dashboard egress policy: DNS + HTTPS
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{cookiecutter.project_slug}}-egress
+  namespace: {{cookiecutter.project_slug}}-${ENVIRONMENT}
+  labels:
+    app: {{cookiecutter.project_slug}}
+spec:
+  podSelector:
+    matchLabels:
+      app: {{cookiecutter.project_slug}}
+  policyTypes:
+    - Egress
+  egress:
+    # DNS (kube-dns)
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+    # HTTPS outbound
+    - ports:
+        - protocol: TCP
+          port: 443
+{%- endif %}

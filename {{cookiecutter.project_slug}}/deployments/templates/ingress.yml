@@ -1,0 +1,56 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{cookiecutter.project_slug}}
+  namespace: {{cookiecutter.project_slug}}-${ENVIRONMENT}
+  labels:
+    app: {{cookiecutter.project_slug}}
+  annotations:
+    external-dns.alpha.kubernetes.io/set-identifier: {{cookiecutter.project_slug}}-ingress-{{cookiecutter.project_slug}}-green
+    external-dns.alpha.kubernetes.io/aws-weight: "100"
+    nginx.ingress.kubernetes.io/limit-rps: '10'
+{%- if cookiecutter.project_type == 'dashboard' %}
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+    nginx.ingress.kubernetes.io/whitelist-source-range: ${ALLOWED_IPS}
+    nginx.ingress.kubernetes.io/enable-modsecurity: 'true'
+    nginx.ingress.kubernetes.io/modsecurity-snippet: |
+      SecAuditEngine On
+      SecRuleEngine On
+      SecDefaultAction "phase:2,pass,log,tag:github_team=${GITHUB_TEAM},tag:namespace={{cookiecutter.project_slug}}"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      location = /.well-known/security.txt {
+        auth_basic off;
+        return 301 https://raw.githubusercontent.com/ministryofjustice/security-guidance/main/contact/vulnerability-disclosure-security.txt;
+      }
+spec:
+  ingressClassName: modsec
+  tls:
+    - hosts:
+        - ${PROJECT_HOST}
+      secretName: {{cookiecutter.project_slug}}-tls
+  rules:
+    - host: ${PROJECT_HOST}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: oauth2-proxy-service
+                port:
+                  number: 4180
+{%- elif cookiecutter.project_type == 'api' %}
+  ingressClassName: internal-non-prod
+  rules:
+    - host: ${PROJECT_HOST}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{cookiecutter.project_slug}}
+                port:
+                  number: 8080
+{%- endif %}
