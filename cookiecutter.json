@@ -10,9 +10,5 @@
     "api",
     "dashboard",
     "data-pipeline"
-  ],
-  "python_version": [
-    "3.13",
-    "3.14"
   ]
 }
