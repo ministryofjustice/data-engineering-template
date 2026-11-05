@@ -15,7 +15,7 @@ repos:
         exclude: "{{cookiecutter.project_slug}}/"
         files: "^(?!.*{{cookiecutter)"
       - id: debug-statements
-        exclude: "{{cookiecutter.project_slug}}/tests/unit/"
+        exclude: "{{cookiecutter.project_slug}}/"
       - id: detect-private-key
       - id: end-of-file-fixer
       - id: mixed-line-ending
@@ -56,6 +56,7 @@ repos:
         language: system
         pass_filenames: false
         types: [python]
+        exclude: "{{cookiecutter.project_slug}}/"
 
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0

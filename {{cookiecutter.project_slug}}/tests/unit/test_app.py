@@ -1,7 +1,5 @@
 """Unit tests for {{cookiecutter.project_name}}."""
 
-import logging
-
 import pytest
 from fastapi.testclient import TestClient
 
