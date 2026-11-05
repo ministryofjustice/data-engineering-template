@@ -40,6 +40,7 @@ mypy_path = "src"
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=term-missing"
+testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
