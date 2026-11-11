@@ -1,0 +1,61 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${NAMESPACE}-deployment
+  labels:
+    app: ${NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ${NAMESPACE}
+  template:
+    metadata:
+      labels:
+        app: ${NAMESPACE}
+    spec:
+      serviceAccountName: data-engineering-template-${ENV_SHORT}
+      securityContext:
+        fsGroup: 1001
+      volumes:
+        - name: app-tmp
+          emptyDir: {}
+        - name: schemas
+          emptyDir: {}
+      containers:
+        - name: ${NAMESPACE}
+          image: ${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}
+          volumeMounts:
+            - name: app-tmp
+              mountPath: /app/tmp
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 16Gi
+              ephemeral-storage: 32Gi
+            limits:
+              cpu: 1000m
+              memory: 32Gi
+              ephemeral-storage: 64Gi
+          securityContext:
+            runAsUser: 1001
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
