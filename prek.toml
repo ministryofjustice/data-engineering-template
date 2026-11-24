@@ -1,0 +1,86 @@
+[[repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+rev = "v6.0.0"
+hooks = [
+  { id = "check-added-large-files" },
+  { id = "check-case-conflict" },
+  { id = "check-docstring-first" },
+  { id = "check-json" },
+  { id = "check-merge-conflict" },
+  { id = "check-symlinks" },
+  { id = "check-toml" },
+  { id = "check-yaml" },
+  { id = "debug-statements" },
+  { id = "detect-private-key" },
+  { id = "end-of-file-fixer" },
+  { id = "mixed-line-ending" },
+  { id = "name-tests-test", args = ["--pytest-test-first"] },
+  { id = "no-commit-to-branch", args = ["--branch", "main", "--branch", "master"] },
+  { id = "pretty-format-json", args = ["--autofix"] },
+  { id = "trailing-whitespace" },
+  { id = "check-xml" },
+]
+
+[[repos]]
+repo = "https://github.com/compilerla/conventional-pre-commit"
+rev = "v4.4.0"
+hooks = [
+  { id = "conventional-pre-commit", stages = ["commit-msg"] },
+]
+
+[[repos]]
+repo = "https://github.com/crate-ci/typos"
+rev = "v1.36.2"
+hooks = [
+  { id = "typos" },
+]
+
+[[repos]]
+repo = "https://github.com/astral-sh/ruff-pre-commit"
+rev = "v0.14.1"
+hooks = [
+  { id = "ruff", types_or = ["python", "pyi", "jupyter"], args = ["--fix"] },
+  { id = "ruff-format", types_or = ["python", "pyi", "jupyter"] },
+]
+
+[[repos]]
+repo = "local"
+[[repos.hooks]]
+id = "mypy"
+name = "mypy"
+entry = "uv run mypy ."
+language = "system"
+pass_filenames = false
+types = ["python"]
+
+[[repos.hooks]]
+id = "detect-secrets"
+name = "detect-secrets"
+entry = "uv run detect-secrets-hook"
+language = "system"
+types = ["python"]
+
+[[repos.hooks]]
+id = "bandit"
+name = "bandit"
+entry = "uv run bandit"
+language = "system"
+types = ["python"]
+args = ["-s", "B101"]
+
+[[repos.hooks]]
+id = "yamllint"
+name = "yamllint"
+entry = "uv run yamllint"
+language = "system"
+types = ["yaml"]
+
+[[repos.hooks]]
+id = "checkov-terraform"
+name = "checkov"
+entry = "uv run checkov"
+language = "system"
+pass_filenames = true
+types = ["terraform"]
+files = "^terraform/"
+args = ["--framework", "terraform", "--quiet", "--compact", "-f"]

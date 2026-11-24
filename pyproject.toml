@@ -9,21 +9,26 @@ description = "A template repo for Data Engineering projects"
 license = "MIT"
 readme = "README.md"
 requires-python = ">=3.13"
+
 dependencies = []
 
 [dependency-groups]
 dev = [
-    "mypy>=1.20.1",
+    "mypy>=2.1.0",
     "pytest-mypy-plugins>=4.1.0",
-    "ruff>=0.15.22",
+    "ruff>=0.16.0",
+    "bandit>=1.9.4",
+    "detect-secrets>=1.5.0",
+    "yamllint>=1.38.0",
 ]
 test = [
     "pytest>=9.1.1",
-    "pytest-cov>=7.0.0"
+    "pytest-cov>=7.1.0"
 ]
 
 [tool.uv]
 package = true
+exclude-newer = "7 days"
 
 [tool.setuptools.packages.find]
 where = ["src", "."]
@@ -39,40 +44,30 @@ explicit_package_bases = true
 warn_unused_ignores = true
 show_error_codes = true
 mypy_path = "src"
+plugins = ["pydantic.mypy"]
 
 [tool.pytest.ini_options]
-addopts = "--cov=src --cov-report=term-missing"
+addopts = "--cov=src --cov-report=term-missing --cov-fail-under=95"
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+show_missing = true
+include_namespace_packages = true
+
 
 [tool.ruff.lint]
-select = ["ALL"]
-# Remove warnings
-ignore = [
-    "D203", # 1 blank line required before class docstring
-    "D213", # Multi-line docstring summary should start at the second line
-    "COM812", # Trailing comma missing
-    "T201", # No print statements
-]
+extend-select = ["E", "B", "UP", "SIM", "I", "PT", "RUF"]
+ignore = ["E501"]
 
-[tool.ruff.lint.per-file-ignores]
-"tests/*" = [
-    "ARG", # some arguments are unused in tests functions but useful (e.g. mocks)
-    "S101", # asserts are OK for tests
-    "SLF001" # accessing private members is OK for tests
-]
 
 [tool.lint.ruff.pydocstyle]
 convention = "google"
-
-[tool.lint.ruff.isort]
-known-first-party = ["src"]
 
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
 line-ending = "auto"
-
-[tool.lint.bandit]
-skips = [
-    "B101", # assert used
-]
