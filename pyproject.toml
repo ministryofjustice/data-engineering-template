@@ -44,7 +44,6 @@ explicit_package_bases = true
 warn_unused_ignores = true
 show_error_codes = true
 mypy_path = "src"
-plugins = ["pydantic.mypy"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=src --cov-report=term-missing --cov-fail-under=95"
